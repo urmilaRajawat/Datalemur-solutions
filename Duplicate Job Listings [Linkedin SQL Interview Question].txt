@@ -1,0 +1,8 @@
+Q. Link: https://datalemur.com/questions/sql-avg-review-ratings
+
+SELECT COUNT(company_id) 
+FROM(
+SELECT company_id,title,description,COUNT(job_id) as job_count
+FROM job_listings
+GROUP BY 1,2,3) a
+where job_count >1;
