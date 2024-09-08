@@ -1,0 +1,11 @@
+Q. Link: https://datalemur.com/questions/final-account-balance
+
+with Trans_table AS (SELECT account_id,transaction_type,
+Case 
+when transaction_type = 'Deposit' THEN amount 
+Else -amount END AS balance_amount
+FROM transactions)
+
+Select account_id, Sum(balance_amount) AS final_balance
+FROM Trans_table
+GROUP BY 1;
