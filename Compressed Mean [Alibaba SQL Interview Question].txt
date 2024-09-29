@@ -1,0 +1,7 @@
+Q. Link: https://datalemur.com/questions/alibaba-compressed-mean
+
+WITH totals AS(SELECT order_occurrences*item_count AS total_item,Sum(order_occurrences)AS total_order 
+FROM items_per_order
+GROUP BY total_item)
+Select ROUND(Cast(SUM(total_item)/Sum(total_order) AS Numeric),1) as mean
+From totals;

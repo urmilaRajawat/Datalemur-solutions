@@ -1,0 +1,104 @@
+Q. Trade In Payouts [Apple SQL Interview Question]
+
+SELECT store_id,SUM(payout_amount) AS revenue
+FROM trade_in_transactions t1
+JOIN trade_in_payouts t2 ON t1.model_id=t2.model_id
+GROUP BY 1
+ORDER BY 2 DESC
+
+Q.Product Line Revenue [NVIDIA SQL Interview Question]
+
+SELECT product_line,SUM(amount) AS revenue
+FROM product_info P
+JOIN transactions t ON p.product_id=t.product_id
+GROUP BY 1
+ORDER BY 2 DESC
+
+Q. Ad Campaign ROAS [Google SQL Interview Question]
+
+WITH CTE AS(SELECT advertiser_id,SUM(spend) AS expense,SUM(revenue) AS rev
+FROM ad_campaigns
+GROUP BY 1)
+SELECT advertiser_id,ROUND((rev/expense)::DECIMAL,2) AS ROAS
+FROM CTE
+ORDER BY 1
+
+
+Q. Top Rated Businesses [Yelp SQL Interview Question]
+
+SELECT 
+COUNT(business_id) AS business_count,
+ROUND(100.0*count(business_id)/(SELECT COUNT(business_id) FROM reviews),0) AS top_rated_pct
+FROM reviews
+WHERE review_stars IN (4, 5);
+
+
+Q. Highest Number of Products [eBay SQL Interview Question]
+
+SELECT user_id, COUNT(product_id) AS product_num
+FROM user_transactions
+GROUP BY 1
+HAVING SUM(spend) >= '1000'
+ORDER BY 2 DESC,SUM(spend) DESC
+LIMIT 3
+
+Q. Subject Matter Experts [Accenture SQL Interview Question]
+
+SELECT employee_id
+FROM employee_expertise 
+GROUP BY employee_id
+HAVING SUM(years_of_experience) >= '8' and COUNT(domain)='1'
+OR SUM(years_of_experience) >= '12' and COUNT(domain)='2'
+
+Q. ApplePay Volume [Visa SQL Interview Question]
+
+WITH CTE AS 
+(SELECT merchant_id,
+CASE WHEN LOWER(payment_method)= 'apple pay' THEN transaction_amount ELSE 0 END AS V,transaction_amount
+FROM transactions)
+SELECT merchant_id, SUM(V) AS total_transaction
+FROM CTE
+GROUP BY 1
+ORDER BY 2 DESC
+
+
+Q. Most Expensive Purchase [Amazon SQL Interview Question]
+
+SELECT customer_id,MAX(purchase_amount)
+FROM transactions 
+GROUP BY 1
+ORDER BY 2 DESC
+
+Q. Patient Support Analysis (Part 1) [UnitedHealth SQL Interview Question]
+
+SELECT COUNT(policy_holder_id)
+FROM(
+SELECT policy_holder_id
+FROM callers
+GROUP BY 1
+Having COUNT(case_id)>= '3') Records
+
+
+Q. Pharmacy Analytics (Part 3) [CVS Health SQL Interview Question]
+
+SELECT 
+  manufacturer, 
+  CONCAT( '$', ROUND(SUM(total_sales) / 1000000), ' million') AS sales_mil 
+FROM pharmacy_sales 
+GROUP BY manufacturer 
+ORDER BY SUM(total_sales) DESC, manufacturer;
+
+Q. Pharmacy Analytics (Part 2) [CVS Health SQL Interview Question]
+
+SELECT manufacturer,Count(drug), ABS(SUM(total_sales-cogs)) AS total_loss
+FROM pharmacy_sales
+Where total_sales-cogs<=0
+GROUP BY 1
+ORDER BY 3 DESC
+
+Q. Pharmacy Analytics (Part 1) [CVS Health SQL Interview Question] 
+
+SELECT drug, total_sales-cogs AS total_profit
+FROM pharmacy_sales
+Order by 2 DESC
+LIMIT 3;

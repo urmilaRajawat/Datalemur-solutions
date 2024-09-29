@@ -1,0 +1,11 @@
+Q. Link: https://datalemur.com/questions/sql-ibm-db2-product-analytics
+WITH Query_count AS (SELECT e.employee_id, COALESCE(COUNT(DISTINCT query_id),0) AS query
+FROM employees e 
+LEFT JOIN queries q ON e.employee_id=q.employee_id
+AND q.query_starttime >= '2023-07-01T00:00:00Z'
+    AND q.query_starttime < '2023-10-01T00:00:00Z'
+GROUP BY 1)
+SELECT query,COUNT(employee_id)
+FROM Query_count
+Group by 1
+Order by 1
